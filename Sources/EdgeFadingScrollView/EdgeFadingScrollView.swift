@@ -45,9 +45,7 @@ public struct EdgeFadingScrollView<Content: View>: View {
     public var body: some View {
         return VStack(spacing: 0) {
             makeEdge(shadowPosition: .bottom)
-                .animation(.none)
                 .opacity(headerDividerIsHidden ? 0 : 1)
-                .animation(.easeOut(duration: 0.3))
             GeometryReader { scrollViewProxy in
                 CustomScrollView(
                     axes,
@@ -65,9 +63,7 @@ public struct EdgeFadingScrollView<Content: View>: View {
                     }
             }
             makeEdge(shadowPosition: .top)
-                .animation(.none)
                 .opacity(footerDividerIsHidden ? 0 : 1)
-                .animation(.easeOut(duration: 0.3))
         }
     }
     
@@ -79,8 +75,10 @@ public struct EdgeFadingScrollView<Content: View>: View {
     }
     
     private func updateDividerIsHidden() {
-        updateHeaderDividerIsHidden()
-        updateFooterDividerIsHidden()
+        withAnimation(.easeOut(duration: 0.3)) {
+            updateHeaderDividerIsHidden()
+            updateFooterDividerIsHidden()
+        }
     }
     
     private func updateHeaderDividerIsHidden() {
