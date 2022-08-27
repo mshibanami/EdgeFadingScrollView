@@ -97,27 +97,3 @@ public struct EdgeFadingScrollView<Content: View>: View {
         footerDividerIsHidden = exceededContentViewHeight >= 0
     }
 }
-
-struct Previews_EdgeFadingScrollView_Previews: PreviewProvider {
-    @ViewBuilder
-    static var previews: some View {
-        EdgeFadingScrollView {
-            VStack {
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-                Text("Hello")
-            }
-            .font(.title)
-        }
-        .preferredColorScheme(.dark)
-        .padding(.vertical, 30)
-        .frame(height: 200, alignment: .center)
-    }
-}

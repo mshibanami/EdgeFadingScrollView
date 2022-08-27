@@ -39,7 +39,7 @@ struct CustomScrollView<Content: View>: View {
         GeometryReader { scrollViewProxy in
             ScrollView(axes, showsIndicators: showsIndicators) {
                 offsetReader
-                AnyView(content()) // なにかのViewで囲わないとContentSize計算がおかしくなる。
+                AnyView(content()) // HACK: Wrap this with AnyView() or whatever. Otherwise, the calculation of the content size doesn't work well.
                     .padding(.top, -8)
                     .background(
                         GeometryReader { contentViewProxy in
