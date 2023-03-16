@@ -12,8 +12,12 @@ public struct EdgeFadingScrollView<Content: View>: View {
     var axes: Axis.Set
     var showsIndicators: Bool
     var content: () -> Content
-    var fadingEdgeColor: Color
-    var fadingEdgeShadowColor: Color
+    var fadingEdgeColor: Color?
+    var fadingEdgeShadowColor: Color?
+    var fadingStartEdgeColor: Color? = nil
+    var fadingEndEdgeColor: Color? = nil
+    var fadingStartEdgeShadowColor: Color? = nil
+    var fadingEndEdgeShadowColor: Color? = nil
     
     @State private var scrollViewContentSize = CGSize.zero {
         didSet { updateDividerIsHidden() }
@@ -37,8 +41,8 @@ public struct EdgeFadingScrollView<Content: View>: View {
     ) {
         self.axes = axes
         self.showsIndicators = showsIndicators
-        self.fadingEdgeColor = fadingEdgeColor ?? Asset.shadowedSeparatorFillColor.swiftUIColor
-        self.fadingEdgeShadowColor = fadingEdgeShadowColor ?? Asset.separatorShadowColor.swiftUIColor
+        self.fadingEdgeColor = fadingEdgeColor
+        self.fadingEdgeShadowColor = fadingEdgeShadowColor
         self.content = content
     }
     
@@ -66,12 +70,24 @@ public struct EdgeFadingScrollView<Content: View>: View {
                 .opacity(footerDividerIsHidden ? 0 : 1)
         }
     }
-    
+
     func makeEdge(shadowPosition: ShadowPosition) -> some View {
-        ShadowedDivider(
+        let defaultDividerColor = Asset.shadowedSeparatorFillColor.swiftUIColor
+        let defaultShadowColor = Asset.separatorShadowColor.swiftUIColor
+        let dividerColor: Color
+        let shadowColor: Color
+        switch shadowPosition {
+        case .top:
+            dividerColor = fadingEndEdgeColor ?? fadingEdgeColor ?? Asset.shadowedSeparatorFillColor.swiftUIColor
+            shadowColor = fadingEndEdgeShadowColor ?? fadingEdgeShadowColor ?? Asset.separatorShadowColor.swiftUIColor
+        case .bottom:
+            dividerColor = fadingStartEdgeColor ?? fadingEdgeColor ?? defaultDividerColor
+            shadowColor = fadingStartEdgeShadowColor ?? fadingEdgeShadowColor ?? defaultShadowColor
+        }
+        return ShadowedDivider(
             shadowPosition: shadowPosition,
-            dividerColor: fadingEdgeColor,
-            shadowColor: fadingEdgeShadowColor)
+            dividerColor: dividerColor,
+            shadowColor: shadowColor)
     }
     
     private func updateDividerIsHidden() {
@@ -91,9 +107,48 @@ public struct EdgeFadingScrollView<Content: View>: View {
             return
         }
         let exceededContentViewHeight = scrollViewSize.height
-            - scrollViewContentSize.height
-            - scrollViewOffset.minY
-            - 8
+        - scrollViewContentSize.height
+        - scrollViewOffset.minY
+        - 8
         footerDividerIsHidden = exceededContentViewHeight >= 0
+    }
+}
+
+// MARK: - View modifying extensions
+public extension EdgeFadingScrollView {
+    func fadingEdgeColor(_ fadingEdgeColor: Color?) -> Self {
+        var view = self
+        view.fadingEdgeColor = fadingEdgeColor
+        return view
+    }
+
+    func fadingEdgeShadowColor(_ fadingEdgeShadowColor: Color?) -> Self {
+        var view = self
+        view.fadingEdgeShadowColor = fadingEdgeShadowColor
+        return view
+    }
+
+    func fadingStartEdgeColor(_ fadingStartEdgeColor: Color?) -> Self {
+        var view = self
+        view.fadingStartEdgeColor = fadingStartEdgeColor
+        return view
+    }
+
+    func fadingEndEdgeColor(_ fadingEndEdgeColor: Color?) -> Self {
+        var view = self
+        view.fadingEndEdgeColor = fadingEndEdgeColor
+        return view
+    }
+
+    func fadingStartEdgeShadowColor(_ fadingStartEdgeShadowColor: Color?) -> Self {
+        var view = self
+        view.fadingStartEdgeShadowColor = fadingStartEdgeShadowColor
+        return view
+    }
+
+    func fadingEndEdgeShadowColor(_ fadingEndEdgeShadowColor: Color?) -> Self {
+        var view = self
+        view.fadingEndEdgeShadowColor = fadingEndEdgeShadowColor
+        return view
     }
 }

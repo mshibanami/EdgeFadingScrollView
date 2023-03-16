@@ -29,7 +29,7 @@ struct ContentView: View {
             }
             .frame(height: 100, alignment: .center)
             .padding(.bottom, 20)
-            
+
             Text("Green Edges")
                 .font(.title3)
             EdgeFadingScrollView(
@@ -39,6 +39,18 @@ struct ContentView: View {
                     Text(Self.contentText)
                 }
                 .frame(height: 100, alignment: .center)
+                .padding(.bottom, 20)
+
+            Text("Edges with different colors")
+                .font(.title3)
+            EdgeFadingScrollView(showsIndicators: true) {
+                Text(Self.contentText)
+            }
+            .fadingStartEdgeColor(.pink)
+            .fadingStartEdgeShadowColor(.pink)
+            .fadingEndEdgeColor(.blue)
+            .fadingEndEdgeShadowColor(.blue)
+            .frame(height: 100, alignment: .center)
         }
         .padding(.vertical, 30)
     }
