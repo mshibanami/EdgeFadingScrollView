@@ -78,8 +78,8 @@ public struct EdgeFadingScrollView<Content: View>: View {
         let shadowColor: Color
         switch shadowPosition {
         case .top:
-            dividerColor = fadingEndEdgeColor ?? fadingEdgeColor ?? Asset.shadowedSeparatorFillColor.swiftUIColor
-            shadowColor = fadingEndEdgeShadowColor ?? fadingEdgeShadowColor ?? Asset.separatorShadowColor.swiftUIColor
+            dividerColor = fadingEndEdgeColor ?? fadingEdgeColor ?? defaultDividerColor
+            shadowColor = fadingEndEdgeShadowColor ?? fadingEdgeShadowColor ?? defaultShadowColor
         case .bottom:
             dividerColor = fadingStartEdgeColor ?? fadingEdgeColor ?? defaultDividerColor
             shadowColor = fadingStartEdgeShadowColor ?? fadingEdgeShadowColor ?? defaultShadowColor
