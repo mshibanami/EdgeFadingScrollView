@@ -21,8 +21,9 @@ struct ShadowedDivider: View {
     }
     
     var body: some View {
-        Divider()
-            .background(dividerColor)
+        Rectangle()
+            .frame(height: 0.5)
+            .foregroundColor(dividerColor)
             .opacity(0.6)
             .shadow(
                 color: shadowColor,
