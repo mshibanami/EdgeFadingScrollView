@@ -1,9 +1,9 @@
 // swiftlint:disable all
 // Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
 
-#if os(macOS)
+#if canImport(AppKit)
   import AppKit
-#elseif os(iOS)
+#elseif canImport(UIKit)
   import UIKit
 #elseif os(tvOS) || os(watchOS)
   import UIKit
@@ -32,9 +32,9 @@ internal enum Asset {
 internal final class ColorAsset {
   internal fileprivate(set) var name: String
 
-  #if os(macOS)
+  #if canImport(AppKit)
   internal typealias Color = NSColor
-  #elseif os(iOS) || os(tvOS) || os(watchOS)
+  #elseif canImport(UIKit) || os(tvOS) || os(watchOS)
   internal typealias Color = UIColor
   #endif
 
@@ -46,7 +46,7 @@ internal final class ColorAsset {
     return color
   }()
 
-  #if os(iOS) || os(tvOS)
+  #if canImport(UIKit) || os(tvOS)
   @available(iOS 11.0, tvOS 11.0, *)
   internal func color(compatibleWith traitCollection: UITraitCollection) -> Color {
     let bundle = BundleToken.bundle
@@ -73,9 +73,9 @@ internal extension ColorAsset.Color {
   @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
   convenience init?(asset: ColorAsset) {
     let bundle = BundleToken.bundle
-    #if os(iOS) || os(tvOS)
+    #if canImport(UIKit) || os(tvOS)
     self.init(named: asset.name, in: bundle, compatibleWith: nil)
-    #elseif os(macOS)
+    #elseif canImport(AppKit)
     self.init(named: NSColor.Name(asset.name), bundle: bundle)
     #elseif os(watchOS)
     self.init(named: asset.name)

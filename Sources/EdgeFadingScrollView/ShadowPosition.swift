@@ -6,9 +6,9 @@
 //  Copyright © 2021 Manabu Nakazawa. All rights reserved.
 //
 
-#if os(macOS)
+#if canImport(AppKit)
 import AppKit
-#elseif os(iOS)
+#elseif canImport(UIKit)
 import UIKit
 #endif
 

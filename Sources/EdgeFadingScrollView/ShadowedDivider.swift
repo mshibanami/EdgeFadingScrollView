@@ -9,16 +9,16 @@
 import Foundation
 import SwiftUI
 
-#if os(iOS)
+#if canImport(UIKit)
 import UIKit
-#elseif os(macOS)
+#elseif canImport(AppKit)
 import AppKit
 #endif
 
 var screenScale: CGFloat {
-#if os(iOS)
+#if canImport(UIKit)
     return UIScreen.main.scale
-#elseif os(macOS)
+#elseif canImport(AppKit)
     return NSScreen.main?.backingScaleFactor ?? 1.0
 #endif
 }
