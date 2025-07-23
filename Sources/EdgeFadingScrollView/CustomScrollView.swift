@@ -18,7 +18,7 @@ struct CustomScrollView<Content: View>: View {
     let onContentSizeChange: ((CGSize) -> Void)?
     let onSizeChange: ((CGSize) -> Void)?
     let content: () -> Content
-    
+
     init(
         _ axes: Axis.Set = .vertical,
         showsIndicators: Bool = true,
@@ -34,36 +34,37 @@ struct CustomScrollView<Content: View>: View {
         self.onSizeChange = onSizeChange
         self.content = content
     }
-    
+
     var body: some View {
-        GeometryReader { scrollViewProxy in
-            ScrollView(axes, showsIndicators: showsIndicators) {
-                offsetReader
-                AnyView(content()) // HACK: Wrap this with AnyView() or whatever. Otherwise, the calculation of the content size doesn't work well.
-                    .padding(.top, -8)
-                    .background(
-                        GeometryReader { contentViewProxy in
-                            Color.clear
-                                .preference(key: ContentSizePreferenceKey.self, value: contentViewProxy.size)
-                                .onPreferenceChange(ContentSizePreferenceKey.self, perform: onContentSizeChange ?? { _ in })
-                        }
-                    )
+        ScrollView(axes, showsIndicators: showsIndicators) {
+            AnyView(content()) // HACK: Wrap this with AnyView() or whatever. Otherwise, the calculation of the content size doesn't work well.
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(
+                    GeometryReader { contentViewProxy in
+                        Color.clear
+                            .preference(key: ContentSizePreferenceKey.self, value: contentViewProxy.size)
+                            .onPreferenceChange(ContentSizePreferenceKey.self, perform: onContentSizeChange ?? { _ in })
+                    }
+                )
+                .background(
+                    GeometryReader { proxy in
+                        Color.clear
+                            .preference(
+                                key: RectPreferenceKey.self,
+                                value: proxy.frame(in: .named(frameLayerCoordinateSpaceName))
+                            )
+                    }
+                )
+        }
+        .coordinateSpace(name: frameLayerCoordinateSpaceName)
+        .onPreferenceChange(RectPreferenceKey.self, perform: onOffsetChange ?? { _ in })
+        .background(
+            GeometryReader { scrollViewProxy in
+                Color.clear
+                    .preference(key: SizePreferenceKey.self, value: scrollViewProxy.size)
+                    .onPreferenceChange(SizePreferenceKey.self, perform: onSizeChange ?? { _ in })
             }
-            .coordinateSpace(name: frameLayerCoordinateSpaceName)
-            .onPreferenceChange(RectPreferenceKey.self, perform: onOffsetChange ?? { _ in })
-            .preference(key: SizePreferenceKey.self, value: scrollViewProxy.size)
-            .onPreferenceChange(SizePreferenceKey.self, perform: onSizeChange ?? { _ in })
-        }
-    }
-    
-    var offsetReader: some View {
-        GeometryReader { proxy in
-            Color.clear.preference(
-                key: RectPreferenceKey.self,
-                value: proxy.frame(in: .named(frameLayerCoordinateSpaceName)))
-        }
-        .frame(height: 0)
-        // this makes sure that the reader doesn't affect the content height
+        )
     }
 }
 

@@ -22,9 +22,11 @@ public struct EdgeFadingScrollView<Content: View>: View {
     @State private var scrollViewContentSize = CGSize.zero {
         didSet { updateDividerIsHidden() }
     }
+
     @State private var scrollViewSize = CGSize.zero {
         didSet { updateDividerIsHidden() }
     }
+
     @State private var scrollViewOffset = CGRect.zero {
         didSet { updateDividerIsHidden() }
     }
@@ -50,21 +52,20 @@ public struct EdgeFadingScrollView<Content: View>: View {
         return VStack(spacing: 0) {
             makeEdge(shadowPosition: .bottom)
                 .opacity(headerDividerIsHidden ? 0 : 1)
-            GeometryReader { scrollViewProxy in
-                CustomScrollView(
-                    axes,
-                    showsIndicators: showsIndicators,
-                    onOffsetChange: {
-                        self.scrollViewOffset = $0
-                    },
-                    onContentSizeChange: {
-                        self.scrollViewContentSize = $0
-                    },
-                    onSizeChange: {
-                        self.scrollViewSize = $0
-                    }) {
-                        content()
-                    }
+            CustomScrollView(
+                axes,
+                showsIndicators: showsIndicators,
+                onOffsetChange: {
+                    self.scrollViewOffset = $0
+                },
+                onContentSizeChange: {
+                    self.scrollViewContentSize = $0
+                },
+                onSizeChange: {
+                    self.scrollViewSize = $0
+                }
+            ) {
+                content()
             }
             makeEdge(shadowPosition: .top)
                 .opacity(footerDividerIsHidden ? 0 : 1)
@@ -87,7 +88,8 @@ public struct EdgeFadingScrollView<Content: View>: View {
         return ShadowedDivider(
             shadowPosition: shadowPosition,
             dividerColor: dividerColor,
-            shadowColor: shadowColor)
+            shadowColor: shadowColor
+        )
     }
     
     private func updateDividerIsHidden() {
@@ -107,14 +109,14 @@ public struct EdgeFadingScrollView<Content: View>: View {
             return
         }
         let exceededContentViewHeight = scrollViewSize.height
-        - scrollViewContentSize.height
-        - scrollViewOffset.minY
-        - 8
+            - scrollViewContentSize.height
+            - scrollViewOffset.minY
         footerDividerIsHidden = exceededContentViewHeight >= 0
     }
 }
 
 // MARK: - View modifying extensions
+
 public extension EdgeFadingScrollView {
     func fadingEdgeColor(_ fadingEdgeColor: Color?) -> Self {
         var view = self
